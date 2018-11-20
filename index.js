@@ -25,6 +25,6 @@ http.createServer(function(request, response){
         // во всех остальных случаях отправляем строку hello world!
         response.end("Hello World!");
     }
-}).listen(3000);
+}).listen(process.env.PORT || 5000);
 
 // let plugin = fs.readFileSync('LinkdInPlugin.crx');
