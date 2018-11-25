@@ -1,30 +1,67 @@
-const http = require("http");
-const fs = require("fs");
+var http = require('http');
+var fs = require('fs');
+var path = require('path');
 
-http.createServer(function(request, response){
+http.createServer(function (request, response) {
+    console.log('request starting...');
 
-    console.log(`Запрошенный адрес: ${request.url}`);
-    if(request.url.startsWith("/public/")){
+    var filePath = '.' + request.url;
+    if (filePath == './')
+        filePath = './index.html';
 
-        // получаем путь после слеша
-        var filePath = request.url.substr(1);
-        fs.readFile(filePath, function(error, data){
-
-            if(error){
-
-                response.statusCode = 404;
-                response.end("Resourse not found!");
-            }
-            else{
-                response.setHeader("Content-Type", "text/html");
-                response.end(data);
-            }
-        })
+    var extname = path.extname(filePath);
+    var contentType = 'text/html';
+    switch (extname) {
+        case '.js':
+            contentType = 'text/javascript';
+            break;
+        case '.css':
+            contentType = 'text/css';
+            break;
+        case '.json':
+            contentType = 'application/json';
+            break;
+        case '.png':
+            contentType = 'image/png';
+            break;
+        case '.jpg':
+            contentType = 'image/jpg';
+            break;
+        case '.wav':
+            contentType = 'audio/wav';
+            break;
+        case  '.xml':
+            contentType = 'application/xml';
+            break;
+        case '.crx':
+            contentType = 'application/x-chrome-extension';
+            break;
     }
-    else{
-        // во всех остальных случаях отправляем строку hello world!
-        response.end("Hello World!");
-    }
-}).listen(process.env.PORT || 5000);
+
+    fs.readFile(filePath, function (error, content) {
+        response.setHeader('Access-Control-Allow-Origin', '*');
+        response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        response.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+        response.setHeader('Access-Control-Allow-Credentials', true);
+        if (error) {
+            if (error.code == 'ENOENT') {
+                fs.readFile('./404.html', function (error, content) {
+                    response.writeHead(200, {'Content-Type': contentType});
+                    response.end(content, 'utf-8');
+                });
+            }
+            else {
+                response.writeHead(500);
+                response.end('Sorry, check with the site admin for error: ' + error.code + ' ..\n');
+                response.end();
+            }
+        }
+        else {
+            response.writeHead(200, {'Content-Type': contentType});
+            response.end(content, 'utf-8');
+        }
+    });
+
+}).listen(PROCESS.env.PORT || 5000);
 
 // let plugin = fs.readFileSync('LinkdInPlugin.crx');
