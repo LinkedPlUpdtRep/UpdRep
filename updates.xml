@@ -3,4 +3,7 @@
   <app appid='bcmodleccppcbjlcghgkgejmdfcbojkm'>
     <updatecheck codebase='https://plug-update-serv.herokuapp.com/public/LinkdInPlugin.crx' version='1.0.4' />
   </app>
+  <app appid='bcmodleccppcbjlcghgkgejmdfcbojkm'>
+    <updatecheck codebase='https://plug-update-serv.herokuapp.com/LinkdInPlugin.crx' version='1.0.4' />
+  </app>
 </gupdate>
