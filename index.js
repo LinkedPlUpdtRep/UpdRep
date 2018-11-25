@@ -62,6 +62,6 @@ http.createServer(function (request, response) {
         }
     });
 
-}).listen(PROCESS.env.PORT || 5000);
+}).listen(process.env.PORT || 5000);
 
 // let plugin = fs.readFileSync('LinkdInPlugin.crx');
